@@ -1,6 +1,4 @@
-
 import random
-
 
 meses = [
     "Enero",
@@ -23,23 +21,35 @@ departamentos = [
     "Jugueteria"
 ]
 
-
-ventas = [[0 for _ in range(3)] for _ in range(12)]
+ventas = [[0 for _ in range(len(departamentos))] for _ in range(12)]
 
 
 def generar_ventas():
-
     for i in range(12):
-
-        for j in range(3):
-
-           
+        for j in range(len(departamentos)):
             ventas[i][j] = random.randint(1000, 50000)
 
 
+def agregar_departamento():
+    nombre = input("\nIngresa el nombre del nuevo departamento: ")
+
+    if nombre.strip() == "":
+        print("\nEl nombre no puede estar vacio.")
+        return
+
+    if nombre in departamentos:
+        print("\nEse departamento ya existe.")
+        return
+
+    departamentos.append(nombre)
+
+    for i in range(12):
+        ventas[i].append(random.randint(1000, 50000))
+
+    print(f"\nDepartamento '{nombre}' agregado correctamente.")
+
 
 def insertar_venta(mes, departamento, cantidad):
-
     ventas[mes][departamento] = cantidad
 
     print("\nVenta insertada correctamente.")
@@ -49,7 +59,6 @@ def insertar_venta(mes, departamento, cantidad):
 
 
 def buscar_venta(mes, departamento):
-
     venta = ventas[mes][departamento]
 
     print("\n========== VENTA ENCONTRADA ==========")
@@ -58,9 +67,7 @@ def buscar_venta(mes, departamento):
     print(f"Venta: ${venta:,.2f}")
 
 
-
 def eliminar_venta(mes, departamento):
-
     ventas[mes][departamento] = 0
 
     print("\nVenta eliminada correctamente.")
@@ -68,50 +75,44 @@ def eliminar_venta(mes, departamento):
     print("Departamento:", departamentos[departamento])
 
 
-
 def mostrar_ventas():
+    print("\n" + "=" * (15 + len(departamentos) * 16))
+    print("VENTAS MENSUALES")
+    print("=" * (15 + len(departamentos) * 16))
 
-    print("\n==============================================================")
-    print("                    VENTAS MENSUALES")
-    print("==============================================================")
+    print(f"{'Mes':<15}", end="")
 
-    print(
-        f"{'Mes':<15}"
-        f"{'Ropa':<15}"
-        f"{'Deportes':<15}"
-        f"{'Jugueteria':<15}"
-    )
+    for departamento in departamentos:
+        print(f"{departamento:<16}", end="")
 
-    print("--------------------------------------------------------------")
+    print()
 
-    for i in range(len(ventas)):
+    print("-" * (15 + len(departamentos) * 16))
 
-        print(
-            f"{meses[i]:<15}"
-            f"${ventas[i][0]:<14,.2f}"
-            f"${ventas[i][1]:<14,.2f}"
-            f"${ventas[i][2]:<14,.2f}"
-        )
+    for i in range(12):
+        print(f"{meses[i]:<15}", end="")
 
-    print("==============================================================")
+        for j in range(len(departamentos)):
+            print(f"${ventas[i][j]:<15,.2f}", end="")
 
+        print()
+
+    print("=" * (15 + len(departamentos) * 16))
 
 
 def mostrar_meses():
-
     print("\n========== MESES ==========")
 
     for i in range(len(meses)):
-
         print(f"{i + 1}. {meses[i]}")
 
-def mostrar_departamentos():
 
+def mostrar_departamentos():
     print("\n========== DEPARTAMENTOS ==========")
 
     for i in range(len(departamentos)):
-
         print(f"{i + 1}. {departamentos[i]}")
+
 
 generar_ventas()
 
@@ -125,19 +126,18 @@ while True:
     print("2. Buscar venta")
     print("3. Eliminar venta")
     print("4. Mostrar todas las ventas")
-    print("5. Regenerar ventas aleatorias")
-    print("6. Salir")
+    print("5. Agregar departamento")
+    print("6. Regenerar ventas aleatorias")
+    print("7. Salir")
     print("==========================================")
 
     opcion = input("Selecciona una opcion: ")
-
 
     if opcion == "1":
 
         mostrar_meses()
 
         try:
-
             mes = int(input("Selecciona el mes: "))
 
             mostrar_departamentos()
@@ -152,22 +152,18 @@ while True:
 
             if (
                 1 <= mes <= 12
-                and 1 <= departamento <= 3
+                and 1 <= departamento <= len(departamentos)
                 and cantidad >= 0
             ):
-
                 insertar_venta(
                     mes - 1,
                     departamento - 1,
                     cantidad
                 )
-
             else:
-
                 print("\nDatos invalidos.")
 
         except ValueError:
-
             print("\nDebes ingresar valores numericos.")
 
     elif opcion == "2":
@@ -175,7 +171,6 @@ while True:
         mostrar_meses()
 
         try:
-
             mes = int(input("Selecciona el mes: "))
 
             mostrar_departamentos()
@@ -186,29 +181,23 @@ while True:
 
             if (
                 1 <= mes <= 12
-                and 1 <= departamento <= 3
+                and 1 <= departamento <= len(departamentos)
             ):
-
                 buscar_venta(
                     mes - 1,
                     departamento - 1
                 )
-
             else:
-
                 print("\nDatos invalidos.")
 
         except ValueError:
-
             print("\nDebes ingresar valores numericos.")
-
 
     elif opcion == "3":
 
         mostrar_meses()
 
         try:
-
             mes = int(input("Selecciona el mes: "))
 
             mostrar_departamentos()
@@ -219,20 +208,16 @@ while True:
 
             if (
                 1 <= mes <= 12
-                and 1 <= departamento <= 3
+                and 1 <= departamento <= len(departamentos)
             ):
-
                 eliminar_venta(
                     mes - 1,
                     departamento - 1
                 )
-
             else:
-
                 print("\nDatos invalidos.")
 
         except ValueError:
-
             print("\nDebes ingresar valores numericos.")
 
     elif opcion == "4":
@@ -241,12 +226,14 @@ while True:
 
     elif opcion == "5":
 
-        generar_ventas()
-
-        print("\nSe generaron nuevas ventas aleatorias.")
-
+        agregar_departamento()
 
     elif opcion == "6":
+
+        generar_ventas()
+        print("\nSe generaron nuevas ventas aleatorias.")
+
+    elif opcion == "7":
 
         print("\nPrograma finalizado.")
         break
